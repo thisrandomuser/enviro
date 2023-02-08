@@ -7,6 +7,8 @@ from enviro import i2c, activity_led
 import enviro.helpers as helpers
 from phew import logging
 from enviro.constants import WAKE_REASON_RTC_ALARM, WAKE_REASON_BUTTON_PRESS
+import veml7700
+
 
 # amount of rain required for the bucket to tip in mm
 RAIN_MM_PER_TICK = 0.2794
@@ -19,6 +21,7 @@ WIND_FACTOR = 0.0218
 
 bme280 = BreakoutBME280(i2c, 0x77)
 ltr559 = BreakoutLTR559(i2c)
+luxsensor= veml7700.VEML7700(address=0x10, i2c=i2c, it=100, gain=1/8)
 
 wind_direction_pin = Analog(26)
 wind_speed_pin = Pin(9, Pin.IN, Pin.PULL_UP)
@@ -199,5 +202,9 @@ def get_sensor_readings(seconds_since_last):
     "wind_speed": wind_speed(),
     "rain": rain,
     "rain_per_second": rain_per_second,
-    "wind_direction": wind_direction()
+    "wind_direction": wind_direction(),
+    "wind_gust_direction" : wind_direction(), 
+    "wind_gust_speed": 0,
+    "lux": 0,
+    "UV": 0
   })
